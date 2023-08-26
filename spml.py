@@ -36,7 +36,7 @@ def generate_data(n=INPUT_SIZE, d=DIMENSIONS, k=CLASSES, s=SUBCLUSTERS, max_rang
         cov = np.eye(d) * max_range**2 / 300      # Control tightness of clusters
         start = round(i * n / (k * s))
         end = start + round(n / (k * s))
-        # np.random.seed(42)
+        np.random.seed(42)
         X[start:end, :] = np.random.multivariate_normal(means, cov, round(n / (k * s)))
         y[start:end] = i % k
     return X, y
@@ -124,7 +124,7 @@ class SPML:
         mean_dist = np.sum(dist_mat) / dist_mat.size
         norm_dist_mat = np.sqrt(dist_mat / mean_dist)
         norm_dist = np.sum(norm_dist_mat) / dist_mat.size
-        opt_dist = n * (s - 1) / s * np.sqrt(s / (s - 1)) / (n - 1)
+        opt_dist = np.sqrt((s - 1) / s)
         return norm_dist - opt_dist
 
     def calc_dist_matrix(self, x):

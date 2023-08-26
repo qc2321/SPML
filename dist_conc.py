@@ -75,7 +75,7 @@ def struct_score(x, k=NUM_CLUSTERS):
     mean_dist = np.sum(dist_x) / dist_x.size
     norm_dist_x = np.sqrt(dist_x / mean_dist)
     norm_dist = np.sum(norm_dist_x) / dist_x.size
-    opt_dist = n * (k-1) / k * np.sqrt(k / (k-1)) / (n-1)
+    opt_dist = np.sqrt((k - 1) / k)
     sigma = (np.sqrt(k / (k-1)) - np.sqrt(n / (n-1))) / 3     # Adjust number of std dev
     score = np.exp(-(norm_dist - opt_dist)**2 / sigma**2)
     return score
