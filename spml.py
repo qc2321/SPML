@@ -119,7 +119,6 @@ class SPML:
         return score
 
     def calc_dist_mat_diff(self, X_c_trans, s):
-        n = X_c_trans.shape[0]
         dist_mat = np.nan_to_num(self.calc_dist_matrix(X_c_trans))
         mean_dist = np.sum(dist_mat) / dist_mat.size
         norm_dist_mat = np.sqrt(dist_mat / mean_dist)
