@@ -4,8 +4,8 @@ from scipy.linalg import sqrtm
 
 INPUT_SIZE = 180
 DIMENSIONS = 2
-CLASSES = 2
-SUBCLUSTERS = 2
+CLASSES = 3
+SUBCLUSTERS = 3
 MAX_RANGE = 100
 
 
@@ -17,19 +17,22 @@ def generate_data(n=INPUT_SIZE, d=DIMENSIONS, k=CLASSES, s=SUBCLUSTERS, max_rang
 
     # Comment out all but one cluster center generation
     # 1) Random cluster centers
-    # for i in range(k * s):
-    #     while True:
-    #         X_means[i] = np.random.rand(d)
-    #         dist = [np.linalg.norm(X_means[j] - X_means[i])
-    #                 for j in range(k) if j != i]
-    #         if all(dist > X_min_dist):
-    #             break
+    for i in range(k * s):
+        j = 0
+        while True:
+            np.random.seed(i * 13 + 19 + j)
+            X_means[i] = np.random.rand(d)
+            dist = [np.linalg.norm(X_means[j] - X_means[i])
+                    for j in range(k) if j != i]
+            if all(dist > X_min_dist):
+                break
+            j += 1
 
     # 2) Manual generation with d=2, k=2, s=2
-    X_means[0] = np.array([0.1, 0.9])
-    X_means[1] = np.array([0.9, 0.9])
-    X_means[2] = np.array([0.1, 0.1])
-    X_means[3] = np.array([0.9, 0.1])
+    # X_means[0] = np.array([0.1, 0.9])
+    # X_means[1] = np.array([0.9, 0.9])
+    # X_means[2] = np.array([0.1, 0.1])
+    # X_means[3] = np.array([0.9, 0.1])
 
     for i in range(k * s):
         means = (X_means[i] - 0.5) * 2 * max_range * 0.9    # Keep spread data within edges
@@ -203,14 +206,17 @@ class SPML:
         return P @ D @ np.linalg.inv(P)
 
 
-def plot_graph(X, y, X_new):
+def plot_graph(X, y, X_new, k=CLASSES, s=SUBCLUSTERS):
     f, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
     ax1.scatter(X[:, 0], X[:, 1], s=10, c=y, cmap='plasma')
+    ax1.set_title(f'Input data with {k} classes and {s} subclusters')
     ax1.set_xlim([-MAX_RANGE, MAX_RANGE])
     ax1.set_ylim([-MAX_RANGE, MAX_RANGE])
     ax2.scatter(X_new[:, 0], X_new[:, 1], s=10, c=y, cmap='plasma')
+    ax2.set_title('Transformed data with activated struct score (SPML)')
     ax2.set_xlim([-MAX_RANGE, MAX_RANGE])
     ax2.set_ylim([-MAX_RANGE, MAX_RANGE])
+    plt.savefig(f'{k}k_{s}s_spml.png')
     plt.show()
 
 
